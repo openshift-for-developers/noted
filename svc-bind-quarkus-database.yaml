@@ -1,0 +1,21 @@
+apiVersion: binding.operators.coreos.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: svc-bind-quarkus-database
+  namespace: o4d-noted
+spec:
+  application:
+    group: apps
+    name: quarkus-backend
+    resource: deployments
+    version: v1
+  bindAsFiles: false
+  mappings:
+  - name: DATABASE_JDBC_URL
+    value: 'jdbc:postgresql://{{ .postgresDB.status.dbConnectionIP }}:{{ .postgresDB.status.dbConnectionPort }}/{{ .postgresDB.status.dbName }}'
+  services:
+  - group: postgresql.baiju.dev
+    id: postgresDB
+    kind: Database
+    name: demo-database
+    version: v1alpha1
